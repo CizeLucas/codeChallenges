@@ -7,52 +7,69 @@ def get_calibration_numbers(string):
     # second_number -> will store all the other numbers found while iterating over the line 
     firstNumber = -1
     secondNumber = -1
-    for i in range(len(string)):
-        if string[i] in numbers[0]:
-            spelled_number = get_spelled_numbers(string[i:])
-            if firstNumber!=(-1):
-                secondNumber = spelled_number
+    spelled_number = -1
+    for i in range(len(string)-1):
+        if string[i].isdigit():
+            #print(int(string[i]))
+            if firstNumber!=-1:
+                secondNumber = int(string[i])
             else:
-                firstNumber = spelled_number
-        else: 
-            if string[i].isdigit():
-                if firstNumber!=(-1):
-                    secondNumber = int(string[i])
-                else:
-                    firstNumber = int(string[i])
+                firstNumber = int(string[i])
+            #print(f"firstNumber: {firstNumber} // secondNumber:{secondNumber}")
+        else:
+            if string[i] in numbers[0]:
+                spelled_number = get_spelled_numbers(string[i:])
 
-            if secondNumber==(-1):
-                secondNumber = firstNumber
+            if spelled_number!=-1:
+                if firstNumber!=-1:
+                    secondNumber = spelled_number
+                else:
+                    firstNumber = spelled_number
+        spelled_number = -1
+
+    if(secondNumber==(-1)):
+        secondNumber = firstNumber
 
     finalResult = firstNumber*10 + secondNumber
 
-    print(f"{string} -> {finalResult}") 
+    #print(f"{string} -> {finalResult}") 
 
     return finalResult
+
 # o, t, f, s, e, n
 def get_spelled_numbers(string):
     for index in range(len(numbers[1])):
-        if(numbers[1][index] in string):
+        if(string[:3] in numbers[1][index]):
             return numbers[2][index]
-
+        
+    for index in range(len(numbers[1])):
+        if(string[:4] in numbers[1][index]):
+            return numbers[2][index]
+        
+    for index in range(len(numbers[1])):
+        if(string[:5] in numbers[1][index]):
+            return numbers[2][index]
+        
     return -1
 
-directory = "C:\\dev\\codeChallenges\\AdventOfCode\\2023\\01\\"
 
+directory = "C:\\dev\\codeChallenges\\AdventOfCode\\2023\\01\\"
+"""
 file = open(directory+"input.txt", 'r')
-print(get_calibration_numbers(file.readline()))
+for i in range(10):
+    #file.readline()
+    print(get_calibration_numbers(file.readline()))
 
 """
+
 with open(directory+"input.txt", 'r') as file:
     counter=1
     sum_of_calib_values=0
 
     for i in range(1000):
         print(f"{counter}) ")
-        sum_of_calib_values += get_calibration_numbers((file.readline()[:-1]))
+        sum_of_calib_values += get_calibration_numbers((file.readline()))
         counter+=1
-        # string[:-1] excludes the last character of the string (excludes '\n')
 
 print(f"The sum of all the calibration values is: {sum_of_calib_values}")
 #SPOILER: the first answer is 54304
-"""

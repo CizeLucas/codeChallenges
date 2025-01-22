@@ -13,6 +13,9 @@ import * as fs from 'fs';
 import { exit, listeners } from 'process';
 import * as readline from 'readline';
 
+// Variable for calculating Part ONE or Part TWO of the challenge
+const isPartOne = false;
+
 // Create a readable stream from the file
 const fileStream = fs.createReadStream('input.txt');
 
@@ -35,20 +38,42 @@ rl.on("line", (line) => {
 
 // Handle end of file
 rl.on('close', () => {
-    console.log('Finished reading the file. \nCalculating the results...');
-    console.log("Showing the first 10 results:");
-    leftValues.sort((a, b) => a - b);
-    rightValues.sort((a, b) => a - b);
-
-    let numberDistance: number[] = [];
     let finalResult = 0;
-    for(let i=0; i<leftValues.length; i++) {
-        numberDistance.push(Math.abs(leftValues[i] - rightValues[i]));
-        if(i < 10)
-            console.log(`${leftValues[i]} - ${rightValues[i]} = ${numberDistance[i]}`)
-        finalResult += numberDistance[i];
-    }
+    if(isPartOne) {
+        // Part One
+        console.log('Finished reading the file. \nCalculating the results...');
+        console.log("Showing the first 10 results:");
+        leftValues.sort((a, b) => a - b);
+        rightValues.sort((a, b) => a - b);
 
+        let numberDistance: number[] = [];
+        
+        for(let i=0; i<leftValues.length; i++) {
+            numberDistance.push(Math.abs(leftValues[i] - rightValues[i]));
+            if(i < 10)
+                console.log(`${leftValues[i]} - ${rightValues[i]} = ${numberDistance[i]}`)
+            finalResult += numberDistance[i];
+        }
+    } else {
+        // Part Two
+        let similarityScoreTuple: [number, number][] = [];
+
+        for(let i=0; i<leftValues.length; i++) {
+            
+            if(!(leftValues[i] == leftValues[i+1] && i!=leftValues.length)) {
+                let numberOfAppearances = 0;
+                rightValues.forEach((number) => {
+                    if(number == leftValues[i])
+                        numberOfAppearances++;
+                });
+                similarityScoreTuple.push([leftValues[i], numberOfAppearances])
+            }  
+        }
+
+        similarityScoreTuple.forEach( ([leftValue, appearances]) => {
+            finalResult += leftValue * appearances;
+        })
+    }
     console.log(finalResult)
 });
 

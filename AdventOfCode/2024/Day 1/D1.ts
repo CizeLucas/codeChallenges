@@ -14,7 +14,7 @@ import { exit, listeners } from 'process';
 import * as readline from 'readline';
 
 // Variable for calculating Part ONE or Part TWO of the challenge
-const isPartOne = false;
+const isPartOne = true;
 
 // Create a readable stream from the file
 const fileStream = fs.createReadStream('input.txt');
